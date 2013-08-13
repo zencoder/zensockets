@@ -51,6 +51,7 @@ app.post('/job', function(req, res) {
   var notification_url = config.zencoder.notification_url + channel;
 
   zc.Job.create({
+    mock: true,
     input: input,
     notifications: notification_url,
     outputs: config.zencoder.outputs()

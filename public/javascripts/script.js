@@ -32,7 +32,7 @@ $(function() {
       // Set the input source to the newly uploaded file and pass along the user's channel
       videoSrc = FPFile.url;
       // Build a request body with the input file and pass the personal channel to the server
-      var request_body = { input_file: videoSrc, channel: 'system' };
+      var request_body = { input_file: videoSrc, channel: personalChannel };
       // Actually POST the request
       $.post('/job', request_body, function(data) {
         // enable the button again
@@ -48,6 +48,17 @@ $(function() {
   // Listen for system-wide messages
   socket.on('system', function (data) {
     console.log(data);
+  });
+
+  // Listen for user-specific messages
+  socket.on(personalChannel, function(data) {
+    if (data.type == 'job.create') { // Just the initial job created callback
+      if (!data.error) {
+        displayNotification('success', 'Job submitted!', 'File is currently processing. <a href="https://app.zencoder.com/jobs/' + data.job_id + '" target="_blank">View job</a>');
+      } else {
+        displayNotification('error', 'Request failed', 'We were unable to create a job at this time. Sorry about that.')
+      }
+    }
   });
 
   // Function for displaying notifications
