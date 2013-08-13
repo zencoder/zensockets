@@ -6,3 +6,21 @@ body {
 a {
   color: #00B7FF;
 }
+
+#notifications {
+  width: 465px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+
+.job-item {
+  margin: 10px 0;
+}
+.video-thumb {
+  height: 150px;
+  width: 100%;
+  overflow: hidden;
+}
+.video-thumb a img { max-width: 100%; height: auto; }
