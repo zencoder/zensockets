@@ -46,7 +46,22 @@ app.post('/notify/:id', function(req, res) {
 // POST /job
 // Sends the API request to Zencoder.
 app.post('/job', function(req, res) {
-  res.send(501);
+  var input = req.body.input_file;
+  var channel = req.body.channel;
+  var notification_url = config.zencoder.notification_url + channel;
+
+  zc.Job.create({
+    input: input,
+    notifications: notification_url,
+    outputs: config.zencoder.outputs()
+  }, function(err, data) {
+    if (err) {
+      io.sockets.emit(channel, {error: true, type: 'job.create', message: 'Something has gone terribly wrong...', error: err});
+      return;
+    }
+    io.sockets.emit(channel, {type: 'job.create', message: 'Job created!', job_id: data.id, outputs: data.outputs})
+  });
+  res.send(202, {message: 'Success!', notification_namespace: channel});
 });
 
 // Emit a message on the system channel every time a client connects

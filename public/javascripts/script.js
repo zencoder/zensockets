@@ -23,6 +23,28 @@ $(function() {
     personalChannel = Math.random().toString(36).substring(7);
   }
 
+  // Filepicker Button
+  $('#pick').click(function(e) {
+    e.preventDefault();
+    filepicker.pick(function(FPFile){
+      // Disable the picker button while we wait
+      $('#pick').addClass('disabled');
+      // Set the input source to the newly uploaded file and pass along the user's channel
+      videoSrc = FPFile.url;
+      // Build a request body with the input file and pass the personal channel to the server
+      var request_body = { input_file: videoSrc, channel: 'system' };
+      // Actually POST the request
+      $.post('/job', request_body, function(data) {
+        // enable the button again
+        $('#pick').removeClass('disabled');
+        console.log('Sent job request...');
+      });
+    }, function(FPError){
+      // Yikes...something went wrong.
+      console.log(FPError.toString());
+    });
+  });
+
   // Listen for system-wide messages
   socket.on('system', function (data) {
     console.log(data);
