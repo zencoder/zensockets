@@ -1,0 +1,28 @@
+var config = {}
+
+config.filepicker = 'Your FilePicker API key';
+
+config.zencoder = 'Your Zencoder API key';
+config.outputUrl = 's3://your-s3-bucket/deleteme/sockets/';
+config.notificationUrl = ' https://unique-key.ngrok.com/notify/';
+
+config.outputs = [
+  {
+    label: 'MP4',
+    base_url: config.outputUrl,
+    public: true,
+    thumbnails: {
+      number: 1,
+      base_url: url,
+      filename: 'webm_{{number}}',
+      public: true
+    }
+  },
+  {
+    label: 'WebM',
+    base_url: config.outputUrl,
+    public: true
+  }
+]
+
+module.exports = config;

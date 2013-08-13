@@ -1,0 +1,27 @@
+doctype 5
+html
+  head
+    title= title
+
+    // Styles
+    link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css', rel='stylesheet')
+    link(href='//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css', rel='stylesheet')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    // Before importing any other JS, go ahead and put locals into variables so client JS can use them.
+    script(type='text/javascript')
+        var filepicker_api_key = '#{filepicker}';
+    script(src='//code.jquery.com/jquery.min.js')
+    script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js')
+    script(src='//api.filepicker.io/v1/filepicker.js')
+    script(src='/socket.io/socket.io.js')
+    script(src='/javascripts/script.js')
+
+    // Video.JS Requirements
+    link(href='http://vjs.zencdn.net/4.1/video-js.css', rel='stylesheet')
+    script(src='http://vjs.zencdn.net/4.1/video.js')
+
+    block header
+  body
+    .container
+      block content
