@@ -10,7 +10,7 @@ var express = require('express')
   , io = require('socket.io').listen(server);
 
 // Instantiate a new Zencoder client with the API key from our config file
-var zc = new Zencoder(config.zencoder);
+var zc = new Zencoder(config.zencoder.api_key);
 
 // App configuration for Express
 app.configure(function(){
