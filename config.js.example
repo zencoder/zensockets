@@ -27,6 +27,7 @@ config.zencoder = {
       {
         label: 'WebM',
         base_url: config.zencoder.output_url,
+        format: 'webm',
         public: true
       }
     ]

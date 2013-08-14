@@ -56,10 +56,40 @@ $(function() {
       if (!data.error) {
         displayNotification('success', 'Job submitted!', 'File is currently processing. <a href="https://app.zencoder.com/jobs/' + data.job_id + '" target="_blank">View job</a>');
       } else {
-        displayNotification('error', 'Request failed', 'We were unable to create a job at this time. Sorry about that.')
+        displayNotification('error', 'Request failed', 'We were unable to create a job at this time. Sorry about that.');
       }
+    } else {
+      jobState(data);
     }
   });
+
+  function jobState(notification) {
+    switch(notification.job.state) {
+      case 'failed':
+        displayNotification('error', 'Job Failed!', 'Some of the outputs may have succeeded, but at least one failed.')
+        break;
+      case 'finished':
+        displayNotification('success', 'Job Success!', 'Congratulations, the job is finished.');
+        $('#outputs').html('<video id="transcoded" class="video-js vjs-default-skin" height="360px" width="640"></video>');
+        videojs("transcoded", {controls: true}, function() {
+          var video = this;
+          var outputs = notification.outputs;
+          var sources = [];
+          $.each(outputs, function(index, value) {
+            // we only have two outputs, so if it's not mp4 it's webm
+            if (value.format == 'mpeg4') {
+              sources.push({type: "video/mp4", src: value.url});
+              video.poster(value.thumbnails[0].url);
+            } else {
+              sources.push({type: "video/webm", src: value.url});
+            }
+          });
+          // set the source
+          video.src(sources);
+        });
+        break;
+    }
+  }
 
   // Function for displaying notifications
   function displayNotification (type, title, text) {

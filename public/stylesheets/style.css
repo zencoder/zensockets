@@ -24,3 +24,12 @@ a {
   overflow: hidden;
 }
 .video-thumb a img { max-width: 100%; height: auto; }
+
+#outputs {
+  margin-top: 20px;
+}
+
+#transcoded {
+  margin: 0 auto;
+  max-width: 100%;
+}

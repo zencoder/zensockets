@@ -40,7 +40,11 @@ app.get('/', function(req, res){
 // POST /notify/some-unique-id
 // Zencoder will publish notifications to this route.
 app.post('/notify/:id', function(req, res) {
-  res.send(501);
+  // Let the client know
+  io.sockets.emit(req.params.id, req.body);
+
+  // Let Zencoder know we got the message
+  res.send(202, {message: "Thanks, Zencoder! We will take it from here."});
 });
 
 // POST /job
@@ -51,7 +55,6 @@ app.post('/job', function(req, res) {
   var notification_url = config.zencoder.notification_url + channel;
 
   zc.Job.create({
-    mock: true,
     input: input,
     notifications: notification_url,
     outputs: config.zencoder.outputs()
