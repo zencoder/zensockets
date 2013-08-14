@@ -48,11 +48,9 @@ app.post('/notify/:id', function(req, res) {
 app.post('/job', function(req, res) {
   var input = req.body.input_file;
   var channel = req.body.channel;
-  var notification_url = config.zencoder.notification_url + channel;
 
   zc.Job.create({
     input: input,
-    notifications: notification_url,
     outputs: config.zencoder.outputs()
   }, function(err, data) {
     if (err) {
