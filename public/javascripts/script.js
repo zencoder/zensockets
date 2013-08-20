@@ -45,6 +45,13 @@ $(function() {
     });
   });
 
+  $('.video-thumb a').click(function(e) {
+    e.preventDefault();
+    $.getJSON($(this).attr('href'), function(data){
+      showPlayer(data.media);
+    });
+  });
+
   // Listen for system-wide messages
   socket.on('system', function (data) {
     console.log(data);
@@ -64,31 +71,47 @@ $(function() {
   });
 
   function jobState(notification) {
-    switch(notification.job.state) {
+    switch(notification.state) {
       case 'failed':
         displayNotification('error', 'Job Failed!', 'Some of the outputs may have succeeded, but at least one failed.')
         break;
       case 'finished':
         displayNotification('success', 'Job Success!', 'Congratulations, the job is finished.');
-        $('#outputs').html('<video id="transcoded" class="video-js vjs-default-skin" height="360px" width="640"></video>');
-        videojs("transcoded", {controls: true}, function() {
-          var video = this;
-          var outputs = notification.outputs;
-          var sources = [];
-          $.each(outputs, function(index, value) {
-            // we only have two outputs, so if it's not mp4 it's webm
-            if (value.format == 'mpeg4') {
-              sources.push({type: "video/mp4", src: value.url});
-              video.poster(value.thumbnails[0].url);
-            } else {
-              sources.push({type: "video/webm", src: value.url});
-            }
-          });
-          // set the source
-          video.src(sources);
-        });
+        $('#jobs').prepend('<div class="col-sm-3 job-item">' +
+                           '  <div class="thumbnail">' +
+                           '    <div class="video-thumb">' +
+                           '      <a href="/media/'+notification._id+'" class="view-media"><img src="'+notification.thumbnail.url+'"/></a>' +
+                           '    </div>' +
+                           '  </div>' +
+                           '</div>');
         break;
     }
+  }
+
+  function showPlayer(file) {
+    // If there's already a player, get rid of it cleanly.
+    if ($('#transcoded').length > 0) { videojs('#transcoded').dispose(); }
+    // Create a new video element
+    $('#outputs').html('<video id="transcoded" class="video-js vjs-default-skin" height="360px" width="640" poster="'+file.thumbnail.url+'"></video>');
+
+    // Add the two sources from the file
+    videojs("transcoded", {controls: true}, function() {
+      var video = this;
+      var outputs = file.outputs;
+      var sources = [];
+
+      // Iterate over the outputs available and add them to the sources.
+      $.each(file.outputs, function(index, value) {
+        // we only have two outputs, so if it's not mp4 it's webm
+        if (value.format == 'mpeg4') {
+          sources.push({type: "video/mp4", src: value.url});
+        } else {
+          sources.push({type: "video/webm", src: value.url});
+        }
+      });
+      // set the source
+      video.src(sources);
+    });
   }
 
   // Function for displaying notifications

@@ -39,7 +39,9 @@ app.locals({
 // GET /
 // Default index route.
 app.get('/', function(req, res){
-  res.render('index', { title: 'Zensockets!' });
+  Media.find({state: "finished"}, function(err, docs) {
+    res.render('index', { title: 'Zensockets!', jobs: docs });
+  })
 });
 
 // POST /notify/some-unique-id
@@ -85,13 +87,15 @@ app.post('/notify/:id', function(req, res) {
       }
     });
 
-    Media.update({_id: req.body.job.pass_through}, jobDoc, function(err) {
+    Media.update({_id: req.body.job.pass_through}, jobDoc, function(err, doc) {
       if (err) {
         console.log(err);
         return;
       }
-      // We're done! Let the client know.
-      io.sockets.emit(req.params.id, req.body);
+      // We're done! Let the client know. We also want the notification to
+      // include the document id, so add that to the object first.
+      jobDoc._id = req.body.job.pass_through;
+      io.sockets.emit(req.params.id, jobDoc);
     });
   }
 });
@@ -120,6 +124,19 @@ app.post('/job', function(req, res) {
       Media.update({_id: newDoc._id}, {$set: {state: 'transcoding'}});
       io.sockets.emit(channel, {type: 'job.create', message: 'Job created!', job_id: data.id, outputs: data.outputs})
     });
+  });
+});
+
+// GET /media/:id
+// Retrieve specific media item
+app.get('/media/:id', function(req, res) {
+  Media.findOne({_id: req.params.id}, function(err, media) {
+    if (err){ res.send(500); return; }
+    if (media) {
+      res.send(200, {media: media});
+    } else {
+      res.send(404, {message: 'Media not found'});
+    }
   });
 });
 
