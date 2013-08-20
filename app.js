@@ -14,8 +14,7 @@ var express = require('express')
 var zc = new Zencoder(config.zencoder.api_key);
 
 // Set up our data stores
-var Media = new Datastore({ filename: 'db/media', autoload: true })
-  , User = new Datastore({ filename: 'db/users', autoload: true});
+var Media = new Datastore({ filename: 'db/media', autoload: true });
 
 // App configuration for Express
 app.configure(function(){
