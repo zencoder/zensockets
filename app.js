@@ -60,7 +60,7 @@ app.post('/notify/:id', function(req, res) {
 
     // Check the job status so we can know if it was successful
     if (req.body.job.state == 'finished') {
-      jobDoc.state = "successful"
+      jobDoc.state = "finished"
     } else {
       jobDoc.state = "failed"
     }
