@@ -12,7 +12,7 @@ config.zencoder = {
 
   notification_url: 'https://unique-key.ngrok.com/notify/', // Where Zencoder should POST notifications
 
-  outputs: function() { // Eventually we may want to pass things to our outputs array...
+  outputs: function(id) { // Eventually we may want to pass things to our outputs array...
     var outputs = [
       {
         label: 'MP4',
@@ -21,6 +21,7 @@ config.zencoder = {
         thumbnails: {
           number: 1,
           base_url: config.zencoder.output_url,
+          filename: '{{number}}_' + id,
           public: true
         }
       },

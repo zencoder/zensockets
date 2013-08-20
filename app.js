@@ -60,7 +60,7 @@ app.post('/notify/:id', function(req, res) {
 
     // Check the job status so we can know if it was successful
     if (req.body.job.state == 'finished') {
-      jobDoc.state = "successful"
+      jobDoc.state = "finished"
     } else {
       jobDoc.state = "failed"
     }
@@ -110,7 +110,7 @@ app.post('/job', function(req, res) {
       input: input,
       notifications: notification_url,
       pass_through: newDoc._id,
-      outputs: config.zencoder.outputs()
+      outputs: config.zencoder.outputs(newDoc._id)
     }, function(err, data) {
       if (err) {
         io.sockets.emit(channel, {error: true, type: 'job.create', message: 'Something has gone terribly wrong...', error: err});
