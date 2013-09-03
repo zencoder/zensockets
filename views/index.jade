@@ -11,4 +11,13 @@ block content
 
   #notifications
 
-  #outputs.row
+  #outputs
+
+  if jobs
+    #jobs.row
+      each job in jobs
+        .col-sm-3.job-item
+          .thumbnail
+            .video-thumb
+              a(href='/media/'+job._id, class='view-media')
+                img(src=job.thumbnail.url)

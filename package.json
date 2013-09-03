@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "Zensockets",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
     "express": "3.1.0",
     "jade": "*",
     "zencoder": "~0.4.2",
-    "socket.io": "~0.9.16"
+    "socket.io": "~0.9.16",
+    "nedb": "~0.8.6"
   }
 }
